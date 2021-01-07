@@ -7,7 +7,9 @@
   "repository": "https://github.com/Scoder12/ezcrosis",
   "license": "MIT",
   "keywords": [],
-  "scripts": {},
+  "scripts": {
+    "build": "tsc -d"
+  },
   "engines": {
     "node": ">=10"
   },
