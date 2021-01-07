@@ -1,1 +1,1 @@
-export * from "./client";
+export { EZCrosis } from "./client";

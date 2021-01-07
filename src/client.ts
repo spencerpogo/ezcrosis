@@ -44,7 +44,7 @@ interface ReplIDContext {
   repl: { id: string };
 }
 
-class EZCrosis {
+export class EZCrosis {
   client: Client<ReplIDContext>;
   _token: string;
   channels: Map<string, Channel>;
