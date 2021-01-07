@@ -1,6 +1,6 @@
 {
   "name": "ezcrosis",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Simple abstractions for using replit/crosis in a node environment",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
