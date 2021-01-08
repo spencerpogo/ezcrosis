@@ -65,7 +65,19 @@ export class EZCrosis {
       },
       body: JSON.stringify({ apiKey }),
     });
-    const res: unknown = await r.json();
+    const text = await r.text();
+
+    let res;
+    try {
+      res = JSON.parse(text);
+    } catch (e) {
+      throw new Error(
+        `Invalid JSON while fetching token for ${replId}: ${JSON.stringify(
+          text
+        )}`
+      );
+    }
+
     if (
       !res ||
       (res as any).status !== 200 ||
