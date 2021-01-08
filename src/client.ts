@@ -62,6 +62,8 @@ export class EZCrosis {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "User-agent": "ezcrosis",
+        "X-requested-with": "ezcrosis",
       },
       body: JSON.stringify({ apiKey }),
     });
