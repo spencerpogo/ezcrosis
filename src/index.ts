@@ -13,10 +13,28 @@ export class ReplNotFoundError extends Error {
 export const performDataRequest = async (
   user: string,
   repl: string
-): Promise<string> => {
+): Promise<any> => {
   let r: Response | undefined = undefined;
   try {
-    r = await fetch(`https://repl.it/data/repls/@${user}/${repl}`);
+    r = await fetch(`https://repl.it/data/repls/@${user}/${repl}`, {
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "ezcrosis",
+        "X-Requested-With": "ezcrosis",
+      },
+    });
+    if (r.status !== 200) {
+      let text;
+      try {
+        text = await r.text();
+      } catch (e) {
+        text = "";
+      }
+      throw new Error(
+        `Got invalid status ${r.status} while getting data for @${user}/${repl}, data: ${text}`
+      );
+    }
+
     const data = await r.json();
     return data;
   } catch (e) {
@@ -29,12 +47,19 @@ export const performDataRequest = async (
   }
 };
 
+export async function getReplId(user: string, slug: string): Promise<string> {
+  const data = await performDataRequest(user, slug);
+
+  if (data && data.id && typeof data.id === "string") {
+    return data.id;
+  }
+
+  throw new Error(`Invalid response received: ${data}`);
+}
+
 export async function parseRepl(
   repl: string,
-  getReplId: (
-    user: string,
-    slug: string
-  ) => Promise<string> = performDataRequest
+  replIdGetter: (user: string, slug: string) => Promise<string> = getReplId
 ): Promise<string | null> {
   // If its a repl id, we're already done
   if (isReplId(repl)) return repl;
@@ -54,5 +79,5 @@ export async function parseRepl(
   // user might include the full repl URL with #filename, strip that out
   slug = slug.split("#")[0];
 
-  return getReplId(user, slug);
+  return await replIdGetter(user, slug);
 }
