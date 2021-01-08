@@ -5,7 +5,10 @@ export { EZCrosis } from "./client";
 export const isReplId = (replId: string): boolean =>
   !!replId && replId.split("-").length == 5;
 
-export class ReplNotFoundError extends Error {}
+export class ReplNotFoundError extends Error {
+  user: string;
+  repl: string;
+}
 
 export const performDataRequest = async (
   user: string,
@@ -18,7 +21,9 @@ export const performDataRequest = async (
     return data;
   } catch (e) {
     if (r && r.status === 404) {
-      throw new ReplNotFoundError("Repl not found");
+      const err = new ReplNotFoundError("Repl not found");
+      err.user = user;
+      err.repl = repl;
     }
     throw e;
   }
