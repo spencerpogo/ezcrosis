@@ -31,11 +31,26 @@ export const performDataRequest = async (
         text = "";
       }
       throw new Error(
-        `Got invalid status ${r.status} while getting data for @${user}/${repl}, data: ${text}`
+        `Got invalid status ${
+          r.status
+        } while fetching data for @${user}/${repl}, data: ${JSON.stringify(
+          text
+        )}`
+      );
+    }
+    const text = await r.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      throw new Error(
+        `Invalid JSON while fetching data for @${user}/${repl}: ${JSON.stringify(
+          text
+        )}`
       );
     }
 
-    const data = await r.json();
     return data;
   } catch (e) {
     if (r && r.status === 404) {
