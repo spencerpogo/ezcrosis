@@ -80,16 +80,12 @@ export class EZCrosis {
       );
     }
 
-    if (
-      !res ||
-      (res as any).status !== 200 ||
-      typeof (res as any).data !== "string"
-    ) {
+    if (!res || (res as any).status !== 200 || typeof res !== "string") {
       const err = new TokenFetchError(`Invalid token response: ${res}`);
       err.res = res;
       throw err;
     }
-    return (res as any).data as string;
+    return res;
   }
 
   async connect(replId: string, apiKey: string) {
